@@ -1,15 +1,25 @@
 import express from "express";
 import dotenv from "dotenv";
-const app=express()
+import mongoose from "mongoose";
+
+import userRoute from "./routes/user.route.js"
+const app = express()
 dotenv.config()
 
-const port=process.env.PORT;
+const port = process.env.PORT;
+const MONGO_URL = process.env.MONGO_URI
+// console.log(MONGO_URL)
 
-app.get("/",(req,res)=>{
-    res.send("hello world")
-});
+try {
+    mongoose.connect(MONGO_URL);
+    console.log("connected to mongodb");
+} catch (error) {
+    console.log(error);
+}
 
-app.listen(port,()=>{
+app.use("/api/users", userRoute)
+
+app.listen(port, () => {
     console.log(`example  listning on port ${port}`);
-    
+
 })
