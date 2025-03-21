@@ -1,50 +1,10 @@
-// import { User } from "../models/user.model.js";
-// import { v2 as cloudinary } from 'cloudinary';
-
-// export const register = async (req, res) => {
-//     //for uploading photo
-//     if (!req.files || Object.keys(req.files).length === 0) {
-//         return res.status(400).json({ messagee: "user photo is required" });
-//     }
-//     const { photo } = req.files;
-//     const allowedFormats = ["image/jpeg", "image/png","image/webp"]
-//     if (!allowedFormats.includes(photo.mimetype)) {
-//         return res.status(400).json({ message: "invalid photo formate.only jpeg and png are allowed" });
-//     }
-
-//     //for all  data
-//     const { email, name, password, phone, education, role } = req.body;
-//     if (!email || !name || !password || !phone || !education || !role ||!photo) {
-//         return res.status(400).json({ message: "all field are required" });
-//     }
-//     const user = await User.findOne({ email })
-//     if (user) {
-//         return res.status(400).json({ message: "user already exists with this email" });
-//     }
-
-//     const cloudinaryResponse=await cloudinary.uploader.upload(
-//         photo.tempFilepath
-//     )
-// if(!cloudinaryResponse || cloudinaryResponse.error){
-//     console.log(cloudinaryResponse.error)
-// }
-
-//     const newUser = new User({ email, name, password, phone, education, role,photo:{
-//         public_id:cloudinaryResponse.public_id,
-//         url:cloudinaryResponse.url,
-//     } });
-//     await newUser.save()
-//     if (newUser) {
-//         res.status(201).json({ message: "user registered succesfuuly",newUser });
-//     }
-// };
-
-
 import { User } from "../models/user.model.js";
 import { v2 as cloudinary } from 'cloudinary';
 import bcrypt from "bcryptjs";
+import createTokenAndSaveCookies from "../jwt/AuthToken.js"
 
-export const register = async (req, res) => { 
+
+export const register = async (req, res) => {
     try {
         // Check if photo is provided
         if (!req.files || Object.keys(req.files).length === 0) {
@@ -77,13 +37,13 @@ export const register = async (req, res) => {
         }
 
 
-const hashedPassword=await bcrypt.hash(password,10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create and save new user
         const newUser = new User({
             email,
             name,
-            password:hashedPassword,
+            password: hashedPassword,
             phone,
             education,
             role,
@@ -93,11 +53,57 @@ const hashedPassword=await bcrypt.hash(password,10);
             },
         });
         await newUser.save();
+        if (newUser) {
+            const token = await createTokenAndSaveCookies(newUser._id, res)
+            return res.status(201).json({ message: "User registered successfully", newUser, token: token });
 
-        return res.status(201).json({ message: "User registered successfully", newUser });
+        }
     } catch (error) {
         console.error('Error during user registration:', error);
         return res.status(500).json({ message: "An error occurred during registration", error: error.message });
     }
 };
 
+export const login = async (req, res) => {
+    const { email, password, role } = req.body;
+    try {
+        if (!email || !password || !role) {
+            return res.status(400).json({ message: "please fill required fields" });
+        }
+        const user = await User.findOne({ email }).select("+password");
+        if (!user.password) {
+            return res.status(400).json({ message: "user password is missing" });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!user || !isMatch) {
+            return res.status(400).json({ message: "invalid email or password" });
+        }
+        if (user.role !== role) {
+            return res.status(400).json({ error: `given role ${role} not found` });
+        }
+        const token = await createTokenAndSaveCookies(user._id, res);
+        res.status(200).json({
+            message: "user logged in succesfully", user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+
+            }, token: token
+        });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: "internal server error" });
+    }
+}
+
+export const logout = (req, res) => {
+    try {
+        res.clearCookie("jwt");
+        res.status(200).json({ message: "User logged out succesfully" });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: "internal server error" })
+    }
+}
