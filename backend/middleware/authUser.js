@@ -23,8 +23,6 @@ next();
 }
 }
 
-
-
 //authorization
 export const isAdmin=(...roles)=>{
     return (req,res,next)=>{

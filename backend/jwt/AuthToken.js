@@ -8,10 +8,12 @@ const createTokenAndSaveCookies=async(userId,res)=>{
     res.cookie("jwt",token,{
        httpOnly:true,
         secure:true,
-        sameSite:"strict" //dont send to cross origin
+        sameSite:"strict" 
     })
     await User.findByIdAndUpdate(userId,{token})
     return token;
 }
 
 export default createTokenAndSaveCookies;
+
+

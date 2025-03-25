@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors"; 
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import fileUpload from "express-fileupload";
@@ -12,6 +13,13 @@ dotenv.config()
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URI
 // console.log(MONGO_URL)
+
+app.use(
+    cors({
+    origin: "http://localhost:5173",    // Your frontend origin
+    credentials: true,               // Allow credentials (cookies, etc.)
+    
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -45,3 +53,4 @@ app.listen(port, () => {
     console.log(`example  listning on port ${port}`);
 
 })
+
