@@ -11,9 +11,10 @@ import Register from "../src/pages/Register";
 import Dashboard from "../src/pages/Dashboard";
 import Creators from "../src/pages/Creators"
 import {useAuth} from "./context/AuthProvider";
+import {Toaster} from 'react-hot-toast';
 function App() {
   const location=useLocation() //useLocation() is a React Router hook used to access the current URL location object.
-  const hideNavbarFooter=["/Dashboard","/Login","/Register"]  
+  const hideNavbarFooter=["/dashboard","/login","/register"]  
   .includes(location.pathname); //it match the current route to array containing route
   const {blogs}=useAuth();
   console.log(blogs)
@@ -23,7 +24,7 @@ function App() {
     <div>
       {!hideNavbarFooter && <Navbar/>}
       <Routes>
-        {/* <Route path='/' element={<Home/>}/> */}
+        <Route path='/' element={<Home/>}/>
         <Route path='/blogs' element={<Blogs/>}/>
         <Route path='/about' element={<About/>}/>
         <Route path='/creators' element={<Creators/>}/>
@@ -32,8 +33,8 @@ function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
       </Routes>
-     
-      {/* {!hideNavbarFooter && <Footer/>} */}
+     <Toaster/>
+      {!hideNavbarFooter && <Footer/>}
       
     </div>
   )
