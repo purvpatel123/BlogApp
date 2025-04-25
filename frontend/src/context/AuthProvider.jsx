@@ -10,16 +10,16 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            try {   
-               
-      const token = Cookie.get('token')
-      const parsedToken=token?JSON.parse(token):undefined
+            try {
+
+                const token = Cookie.get('token')
+                const parsedToken = token ? JSON.parse(token) : undefined
                 const { data } = await axios.get("http://localhost:4001/api/users/my-profile", {
 
-                    withCredentials: true ,                // ✅ Include credentials if needed
-                headers:{
-                    'content-type':'application/json'
-                }
+                    withCredentials: true,                // ✅ Include credentials if needed
+                    headers: {
+                        'content-type': 'application/json'
+                    }
                 });
                 console.log(data)
                 setProfile(data)
@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
             }
         }
         const fetchBlogs = async () => {
-            try {   
+            try {
 
 
                 const { data } = await axios.get("http://localhost:4001/api/blogs/all-blogs", {
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
         fetchProfile()
     }, [])
     return (
-        <AuthContext.Provider value={{ blogs,profile,isAuthenticated }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ blogs, profile, isAuthenticated }}>{children}</AuthContext.Provider>
     )
 };
 export const useAuth = () => useContext(AuthContext)
