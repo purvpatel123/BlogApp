@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
         fetchProfile()
     }, [])
     return (
-        <AuthContext.Provider value={{ blogs, profile, isAuthenticated }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ blogs, profile,setProfile, isAuthenticated ,setIsAuthenticated}}>{children}</AuthContext.Provider>
     )
 };
 export const useAuth = () => useContext(AuthContext)

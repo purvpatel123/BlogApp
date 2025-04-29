@@ -2,7 +2,11 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
+  const {isAuthenticated,setIsAuthenticated} = useAuth()
+  const navigateTo = useNavigate()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -24,13 +28,13 @@ const Login = () => {
         }
       );
       console.log(data)
-      toast.success(data.message || 'user registered succesfully')
-      
+      toast.success(data.message || 'user login succesfully')
+      setIsAuthenticated(true)
       setEmail("")
       
       setPassword("")
       setRole("")
-      
+      navigateTo("/");
 
     } catch (error) {
       console.log(error);

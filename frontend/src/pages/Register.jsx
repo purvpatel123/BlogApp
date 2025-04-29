@@ -2,7 +2,11 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
+  const {isAuthenticated,setIsAuthenticated} = useAuth()
+  navigateTo = useNavigate()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
@@ -37,6 +41,7 @@ const Register = () => {
       const { data } = await axios.post('http://localhost:4001/api/users/register', formData,);
       console.log(data)
       toast.success(data.message || 'user registered succesfully')
+      setIsAuthenticated(true)
       setName("")
       setEmail("")
       setPhone("")
@@ -45,6 +50,7 @@ const Register = () => {
       setEducation("")
       setPhoto("")
       setPhotoPreview("")
+      navigateTo("/")
 
     } catch (error) {
       console.log(error);
