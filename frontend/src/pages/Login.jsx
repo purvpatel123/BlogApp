@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
-  const {isAuthenticated,setIsAuthenticated} = useAuth()
+  const {isAuthenticated,setIsAuthenticated,setProfile} = useAuth()
   const navigateTo = useNavigate()
 
   const [email, setEmail] = useState("")
@@ -29,6 +29,7 @@ const Login = () => {
       );
       console.log(data)
       toast.success(data.message || 'user login succesfully')
+      setProfile(data)
       setIsAuthenticated(true)
       setEmail("")
       
@@ -38,7 +39,9 @@ const Login = () => {
 
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "please fill required fields")
+      toast.error(error.response.data.message || "please fill required fields",
+        {duration:3000}
+      )
     }
   }
 
@@ -66,7 +69,7 @@ const Login = () => {
             </div>
 
 
-            <p className='text-center mb-4'>New user?{""} <Link className="text-blue-600">Register now</Link>
+            <p className='text-center mb-4'>New user? <Link to={"/Register"} className="text-blue-600">Register now</Link>
             </p>
             <button type='submit' className='w-full p-2 bg-blue-500 hover:bg-blue-800 duration-300 rounded-md'>Login</button>
           </form>

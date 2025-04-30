@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 function Sidebar({ setComponent }) {
   const { profile, setIsAuthenticated } = useAuth();
-  // console.log(profile?.user);
+  console.log(profile);
   const navigateTo = useNavigate();
 
   const [show, setShow] = useState(false);
@@ -56,11 +56,18 @@ function Sidebar({ setComponent }) {
           <BiSolidLeftArrowAlt className="text-2xl" />
         </div>
         <div className="text-center">
-          <img
+          {/* <img
             className="w-24 h-24 rounded-full mx-auto mb-2"
-            src={profile?.photo?.url}
+            src={profile?.photo}
             alt=""
-          />
+          /> */}
+           {profile?.photo?.url && (
+            <img
+              src={profile.photo.url}
+              alt="User"
+              className="w-32 h-32 rounded-full border mt-4"
+            />
+          )}
           <p className="text-lg font-semibold">{profile?.user?.name}</p>
         </div>
         <ul className="space-y-6 mx-4">

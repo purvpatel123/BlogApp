@@ -10,7 +10,7 @@ function Hero() {
       {blogs && blogs.length>0 ?(
         blogs.slice(0,4).map((element)=>{
           return(
-            <Link to={`/`} key={element._id}
+            <Link to={`/blog/${element._id}`} key={element._id}
             className='bg-white rounded-lg hover:shadow-lg overflow-hidden transform
              hover:scale-105 transition-transform duration-300'>
               <div className='group relative'>
@@ -30,7 +30,9 @@ function Hero() {
             </Link>
           )
         })
-      ):(<div></div>)}
+      ):(<div className='flex h-screen item-center justify-center'>
+        Loading....
+      </div>)}
     </div>
   )
 }

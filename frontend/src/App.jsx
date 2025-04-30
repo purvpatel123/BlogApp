@@ -13,11 +13,14 @@ import Creators from "../src/pages/Creators"
 import {useAuth} from "./context/AuthProvider";
 import {Toaster} from 'react-hot-toast';
 import UpdateBlog from './dashboard/UpdateBlog'
+import Detail from './pages/Detail';
+import Notfound from './pages/Notfound';
+import { Navigate } from 'react-router-dom'
 function App() {
   const location=useLocation() //useLocation() is a React Router hook used to access the current URL location object.
   const hideNavbarFooter=["/dashboard","/login","/register"]  
   .includes(location.pathname); //it match the current route to array containing route
-  const {blogs}=useAuth();
+  const {blogs,isAuthenticated}=useAuth();
   console.log(blogs)
   
 
@@ -25,7 +28,7 @@ function App() {
     <div>
       {!hideNavbarFooter && <Navbar/>}
       <Routes>
-        <Route path='/' element={<Home/>}/>
+        <Route path='/' element={isAuthenticated===true?<Home/> : <Navigate to={"/login"}/>}/>
         <Route path='/blogs' element={<Blogs/>}/>
         <Route path='/about' element={<About/>}/>
         <Route path='/creators' element={<Creators/>}/>
@@ -33,7 +36,12 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
+
+        
         <Route path='/blog/update/:id' element={<UpdateBlog/>}/>
+        <Route path='/blog/:id' element={<Detail/>}/>
+        {/* universal route */}
+        <Route path='*' element={<Notfound/>}/>
       </Routes>
      <Toaster/>
       {!hideNavbarFooter && <Footer/>}

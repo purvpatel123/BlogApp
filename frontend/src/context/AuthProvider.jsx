@@ -4,7 +4,7 @@ import Cookie from 'js-cookie'
 
 export const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
-    const [blogs, setBlogs] = useState([])
+    const [blogs, setBlogs] = useState(null)
     const [profile, setProfile] = useState([])
     const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
         fetchProfile()
     }, [])
     return (
-        <AuthContext.Provider value={{ blogs, profile,setProfile, isAuthenticated ,setIsAuthenticated}}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ blogs, profile, setProfile, isAuthenticated, setIsAuthenticated }}>{children}</AuthContext.Provider>
     )
 };
 export const useAuth = () => useContext(AuthContext)

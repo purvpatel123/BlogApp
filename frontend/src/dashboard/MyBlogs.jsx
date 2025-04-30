@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 function MyBlogs() {
+  const navigateTo = useNavigate()
   const [myBlogs, setMyBlogs] = useState([])
   useEffect(() => {
     const fetchMyBlogs = async () => {
@@ -25,6 +27,7 @@ function MyBlogs() {
       withCredentials: true
     }).then((res) => {
       toast.success(res.data.message || "Blog deleted successfully")
+      navigateTo("/")
       setMyBlogs((value) => value.filter((blog) => blog._id !== id))
     }).catch((error) => {
       toast.error(error.response.data.message || "Failed to delete blog")
@@ -32,10 +35,11 @@ function MyBlogs() {
   }
   return (
     <div>
-      <div className="container mx-auto my-12 p-4">
+      <div className="container mx-auto my-12 p-4 ml-60">
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 md:ml-20">
           {myBlogs && myBlogs.length > 0 ? (
             myBlogs.map((element) => (
+              <Link to={`/blog/${element._id}`}>
               <div
                 className="bg-white shadow-lg rounded-lg overflow-hidden"
                 key={element._id}
@@ -68,8 +72,10 @@ function MyBlogs() {
                       DELETE
                     </button>
                   </div>
+                  
                 </div>
               </div>
+              </Link>
             ))
           ) : (
             <p className="text-center text-gray-500">
