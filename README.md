@@ -9,12 +9,7 @@ Admins: Have full control to create, update, and delete blog posts.
 Users: Can view published blog posts and send messages to the admin via a contact form.
 
 Security: Protected routes ensure that only authorized users can access certain functionalities.
-YouTube
-+3
-YouTube
-+3
-adeesh.hashnode.dev
-+3
+
 
 🔑 Key Features
 Admin Capabilities: Create, update, and delete blog posts.
