@@ -1,58 +1,63 @@
-import React, { useContext, createContext, useEffect, useState } from 'react'
+
+import React, { useContext, createContext, useEffect, useState } from "react";
 import axios from "axios";
-import Cookie from 'js-cookie'
+import Cookie from "js-cookie";
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
+
 const AuthProvider = ({ children }) => {
-    const [blogs, setBlogs] = useState(null)
-    const [profile, setProfile] = useState([])
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [blogs, setBlogs] = useState(null);
+  const [profile, setProfile] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // <-- loading state added
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        // You can optionally check token existence from cookies here if you want
+        const token = Cookie.get("token");
+        // console.log("token:", token);
 
-                const token = Cookie.get('token')
-                const parsedToken = token ? JSON.parse(token) : undefined
-                const { data } = await axios.get("http://localhost:4001/api/users/my-profile", {
+        const { data } = await axios.get("http://localhost:4001/api/users/my-profile", {
+          withCredentials: true,
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+        setProfile(data);
+        setIsAuthenticated(true);
+      } catch (error) {
+        setIsAuthenticated(false);
+        setProfile([]);
+      } finally {
+        setLoading(false); // <-- loading finished after fetchProfile completes
+      }
+    };
 
-                    withCredentials: true,                // ✅ Include credentials if needed
-                    headers: {
-                        'content-type': 'application/json'
-                    }
-                });
-                console.log(data)
-                setProfile(data)
-                setIsAuthenticated(true)
-            } catch (error) {
-                console.log(error);
+    const fetchBlogs = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:4001/api/blogs/all-blogs", {
+          withCredentials: true,
+        });
+        setBlogs(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-            }
-        }
-        const fetchBlogs = async () => {
-            try {
+    fetchBlogs();
+    fetchProfile();
+  }, []);
 
-
-                const { data } = await axios.get("http://localhost:4001/api/blogs/all-blogs", {
-
-                    withCredentials: true                 // ✅ Include credentials if needed
-                });
-                console.log(data)
-                setBlogs(data)
-            } catch (error) {
-                console.log(error);
-
-            }
-        };
-        fetchBlogs()
-        fetchProfile()
-    }, [])
-    return (
-        <AuthContext.Provider value={{ blogs, profile, setProfile, isAuthenticated, setIsAuthenticated }}>{children}</AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider
+      value={{ blogs, profile, setProfile, isAuthenticated, setIsAuthenticated, loading }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
-export const useAuth = () => useContext(AuthContext)
+
+export const useAuth = () => useContext(AuthContext);
 
 export default AuthProvider;
-
-
