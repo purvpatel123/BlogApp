@@ -14,12 +14,31 @@ const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URI
 // console.log(MONGO_URL)
 
-app.use(
-    cors({
-    origin: "http://localhost:5173",    // Your frontend origin
-    credentials: true,               // Allow credentials (cookies, etc.)
+// app.use(
+//     cors({
+//     origin: 
+//     "http://localhost:5173",   
+//     credentials: true,               
     
+// }));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://blogapp-2-zxnq.onrender.com",
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
+
 
 app.use(express.json());
 app.use(cookieParser());
