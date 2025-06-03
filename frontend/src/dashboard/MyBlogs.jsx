@@ -4,13 +4,14 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { BACKEND_URL } from '../utils'
 function MyBlogs() {
   const navigateTo = useNavigate()
   const [myBlogs, setMyBlogs] = useState([])
   useEffect(() => {
     const fetchMyBlogs = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4001/api/blogs/my-blog", {
+        const { data } = await axios.get(`${BACKEND_URL}/api/blogs/my-blog`, { // api endpoint for fetching my blogs
           withCredentials: true
         });
         console.log(data)
@@ -23,7 +24,7 @@ function MyBlogs() {
   }, []);
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:4001/api/blogs/delete/${id}`, {
+    await axios.delete(`${BACKEND_URL}/api/blogs/delete/${id}`, { // api endpoint for deleting blog
       withCredentials: true
     }).then((res) => {
       toast.success(res.data.message || "Blog deleted successfully")

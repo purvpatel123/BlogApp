@@ -1,4 +1,4 @@
-
+import { BACKEND_URL } from "../utils";
 import React, { useContext, createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
         const token = Cookie.get("token");
         // console.log("token:", token);
 
-        const { data } = await axios.get("http://localhost:4001/api/users/my-profile", {
+        const { data } = await axios.get(`${BACKEND_URL}/api/users/my-profile`, {
           withCredentials: true,
           headers: {
             "content-type": "application/json",
@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
 
     const fetchBlogs = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4001/api/blogs/all-blogs", {
+        const { data } = await axios.get(`${BACKEND_URL}/api/blogs/all-blogs`, {
           withCredentials: true,
         });
         setBlogs(data);
