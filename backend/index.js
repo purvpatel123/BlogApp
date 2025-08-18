@@ -33,7 +33,7 @@ const MONGO_URL = process.env.MONGO_URI
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://blogapp-2-zxnq.onrender.com",
+  "https://blogapp-front-5r01.onrender.com",
 ];
 
 app.use(cors({
