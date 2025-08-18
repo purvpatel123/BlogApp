@@ -9,8 +9,8 @@ const createTokenAndSaveCookies=async(userId,res)=>{
        httpOnly:true, 
     // httpOnly:false,  
         secure:true,
-        // sameSite:"strict"   // "strict" for same-site cookies, "lax" for same-site lax cookies
-        sameSite:"none",   // for cross-site cookies
+        sameSite:"strict"   // "strict" for same-site cookies, "lax" for same-site lax cookies
+        // sameSite:"none",   // for cross-site cookies
     })
     await User.findByIdAndUpdate(userId,{token})
     return token;
