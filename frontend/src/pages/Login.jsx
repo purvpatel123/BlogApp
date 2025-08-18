@@ -69,7 +69,7 @@ const Login = () => {
             </div>
 
 
-            <p className='text-center mb-4'>New user? <Link to={"/Register"} className="text-blue-600">Register now</Link>
+            <p className='text-center mb-4'>New user? <Link to={"/register"} className="text-blue-600">Register now</Link>
             </p>
             <button type='submit' className='w-full p-2 bg-blue-500 hover:bg-blue-800 duration-300 rounded-md'>Login</button>
           </form>
