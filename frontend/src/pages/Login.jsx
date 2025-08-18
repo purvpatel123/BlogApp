@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from '../utils';
 const Login = () => {
   const {isAuthenticated,setIsAuthenticated,setProfile} = useAuth()
   const navigateTo = useNavigate()
@@ -20,7 +21,7 @@ const Login = () => {
       toast.error("please fill all fields")
     }
     try {
-      const { data } = await axios.post('http://localhost:4001/api/users/login',
+      const { data } = await axios.post(`${BACKEND_URL}/api/users/login`,
         { email, password, role },
         {
           withCredentials:true,
